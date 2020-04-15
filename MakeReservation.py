@@ -14,7 +14,7 @@ party_size = "2"
 restaurant_name ='Yujin Izakaya'
 first_name = 'John'
 last_name='Tan'
-email_address = 'darryl.leong90@gmail.com'
+email_address = 'test@gmail.com'
 phone_number = '98769876'
     
 def make_reservation(reservation_date,reservation_time,party_size,restaurant_name,first_name,last_name,email_address,phone_number):
