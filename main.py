@@ -24,17 +24,12 @@ def webhook():
     intent_name = req.get_intent_displayName()
     print("here to print intent_name "+ intent_name)
 
-    if intent_name == "GetRestaurantInfo" or intent_name == "GetRestaurantInfo-yes":
+    if intent_name == "GetRestaurantInfo" :
         return make_response(GetRestaurantInfo.process(req))
+    
+    if intent_name == "GetRestaurantInfo - yes" :
+        return make_response(GetRestaurantInfo.makeReservation(req))
    
-    # TODO: STEP 2
-    # Write your code here..
-    # write some if/else to check for the correct intent name.
-    # Write code to call the getWeatherIntentHandler function with appropriate input
-
-    if intent_name == "Weather Intent":
-        respose_text = "weather"
-
     else:
         respose_text = "No intent matched from fullfilment code."
     # Branching ends here
