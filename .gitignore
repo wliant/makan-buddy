@@ -1,3 +1,9 @@
 env/*
 *.zip
 .vscode/*
+data/*
+__pycache__/*
+json/*
+npz/*
+nearest_neighbors.json
+process_data_error.json
