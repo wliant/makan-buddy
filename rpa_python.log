@@ -1,9 +1,2 @@
 
-START - automation started - Wed Apr 15 2020 21:03:44 GMT+0800 (Malay Peninsula Standard Time)
-
-LIVE MODE - type done to quit
- [RPA][STARTED]
-[RPA][0] - listening for inputs
-[RPA][1] - https://www.chope.co/singapore-restaurants
-[RPA][1] - listening for inputs
-[RPA][2] - exist_result = exist('(//input[contains(@id,"date-field")])[1]').toString()
+START - automation started - Sun Apr 26 2020 18:15:57 GMT+0800 (Malay Peninsula Standard Time)

@@ -7,3 +7,9 @@ json/*
 npz/*
 nearest_neighbors.json
 process_data_error.json
+rpa_python
+rpa_python.json
+rpa_python.raw
+rpa_python.js
+tagui_local.js
+rpa_python.log
