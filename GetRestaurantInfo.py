@@ -4,14 +4,11 @@ import json
 import intelligence
 import MakeReservation
 
-CONTEXT_ASK_PROGRAMME = "GetRestaurantInfo-followup"
+CONTEXT_ASK_PROGRAMME = "getrestaurantinfo-followup"
 
-RESTAURANT_NAME = ""
-
-reservation_date = "16/05/2020"
+reservation_date = "16/07/2020"
 reservation_time = "1730"
 party_size = "2"
-restaurant_name ='Yujin Izakaya'
 first_name = 'John'
 last_name='Tan'
 email_address = 'test@gmail.com'
@@ -22,11 +19,11 @@ def process(req):
     for j in range(0, 10):
         id,path = i.get_query()
         i.update_response(id, 3, 0, 0)
-    RESTAURANT_NAME = i.get_result();
+    restaurant_name = i.get_result();
     
-    print("here is the restaurant name" + RESTAURANT_NAME)
-    res = DialogflowResponse("We are recommanding " + RESTAURANT_NAME + ", do you want to make a reservation?")
-     
+    res = DialogflowResponse("We are recommanding " + restaurant_name + ", do you want to make a reservation?")
+    res.add(SimpleResponse("We are recommanding " + restaurant_name + ", do you want to make a reservation?","We are recommanding " + restaurant_name + ", do you want to make a reservation?"))
+    res.add(OutputContexts(req.get_project_id(), req.get_session_id(),CONTEXT_ASK_PROGRAMME,5,{"restaurantName": restaurant_name}))
     return res.get_final_response()    
     #if isConfirmed == "yes":
     #    print("here proceed to make reservation")
@@ -34,10 +31,11 @@ def process(req):
     # fdreturn DialogflowResponse("We recommand the restaurant "+restaurant_name +", do you want to book a table?").get_final_response()
     
 def makeReservation(req):
-    
-    print("make reservation for " + RESTAURANT_NAME)
-    
-    MakeReservation.make_reservation(reservation_date,reservation_time,party_size,RESTAURANT_NAME,first_name,last_name,email_address,phone_number)
-    res = DialogflowResponse("finish making reservation for  " + RESTAURANT_NAME )
+    outputcontext = req.get_single_ouputcontext(CONTEXT_ASK_PROGRAMME)
+    restaurant_name = outputcontext["parameters"]["restaurantName"]
+    print(restaurant_name)
+    #MakeReservation.make_reservation(reservation_date,reservation_time,party_size,restaurant_name,first_name,last_name,email_address,phone_number)
+    res = DialogflowResponse("finish making reservation for  " + restaurant_name )
      
     return res.get_final_response()  
+
