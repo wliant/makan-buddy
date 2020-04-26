@@ -8,7 +8,7 @@ Created on Wed Apr 15 20:42:33 2020
 import tagui as t
 
 #Sample Values
-reservation_date = "16/05/2020"
+reservation_date = "16/07/2020"
 reservation_time = "1730"
 party_size = "2"
 restaurant_name ='Yujin Izakaya'
@@ -34,22 +34,25 @@ def make_reservation(reservation_date,reservation_time,party_size,restaurant_nam
             start_time_option = str(start_time_hr)+":"+reservation_time[2:4]+" am"
             
         #Booking Parameters
-        chope_url ='https://www.chope.co/singapore-restaurants'
+        chope_url ='https://www.chope.co/singapore-restaurants/category/restaurant/'
         t.init()
         t.url(chope_url)
         t.wait(5)
         #Date Field
-        t.click(f"(//input[contains(@id,'date-field')])[1]")
+        t.click(f"(//span[contains(@class,'input-group-addon icon-calendar')])[1]")
+        t.wait(10)
+        t.click('//a[@title="Next"]')
+        t.wait(5)
+        t.click('//a[@title="Next"]')
         t.click(f"//td[@data-handler='selectDay'and @data-month='{reservation_month}']/a[text()='{reservation_day}']")
         #Time Field
         t.select(f"//select[contains(@id,'time-field')]",start_time_option)
         #Number of Diners Field
-        t.click(f"(//input[contains(@id,'diners-field')])[1]")
+        t.click(f"(//span[contains(@class,'input-group-addon icon-person')])[1]")
         t.select(f"//select[contains(@id,'adults')]",party_size)
         #Restaurant Field
-        t.click(f"(//select[contains(@id,'sel-restaurant')])[1]")
-        t.type('//input[@class="select2-search__field"]', restaurant_name)
-        t.click('//span[@class="icon icon-search"]')
+        t.type(f"//select[contains(@id,'sb-sel-restaurant')]",restaurant_name)
+        t.click('//button[@id="btn-search"]')
         t.wait(5)
         
         #Secondary Page to Confirm Timing
