@@ -8,10 +8,10 @@ Created on Wed Apr 15 20:42:33 2020
 import tagui as t
 
 #Sample Values
-reservation_date = "16/07/2020"
+reservation_date = "16/09/2020"
 reservation_time = "1730"
 party_size = "2"
-restaurant_name ='Yujin Izakaya'
+restaurant_name ='Kith Cafe'
 first_name = 'John'
 last_name='Tan'
 email_address = 'test@gmail.com'
@@ -40,10 +40,14 @@ def make_reservation(reservation_date,reservation_time,party_size,restaurant_nam
         t.wait(10)
         #Date Field
         t.click(f"(//span[contains(@class,'input-group-addon icon-calendar')])[1]")
-        t.wait(10)
-        t.click('//a[@title="Next"]')
-        t.wait(5)
-        t.click('//a[@title="Next"]')
+        t.wait(7)
+        boolean_flag=1
+        while boolean_flag:
+            if t.present(f"//td[@data-handler='selectDay'and @data-year='{reservation_year}' and @data-month='{reservation_month}']/a[text()='{reservation_day}']"):
+                t.click(f"//td[@data-handler='selectDay'and @data-year='{reservation_year}' and @data-month='{reservation_month}']/a[text()='{reservation_day}']")
+                boolean_flag=0
+            else:
+                t.click('//a[@title="Next"]')
         t.click(f"//td[@data-handler='selectDay'and @data-month='{reservation_month}']/a[text()='{reservation_day}']")
         #Time Field
         t.select(f"//select[contains(@id,'time-field')]",start_time_option)
@@ -78,9 +82,10 @@ def make_reservation(reservation_date,reservation_time,party_size,restaurant_nam
         t.wait(5)
         t.close()
         print('Success')
-        
+        return 'Reservation Successful'
     except:
         print('Error')
+        return 'Reservation Unsuccessful. Unforunately, the restaurant was no able to accomodate your reservation.'
         
         
 make_reservation(reservation_date,reservation_time,party_size,restaurant_name,first_name,last_name,email_address,phone_number)
