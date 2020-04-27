@@ -52,20 +52,22 @@ class Intel:
             if query["positive"] > 0:
                 nn = self.neighbors[query["npz"]]
                 for i in nn:
-                    restaurant_name = self.get_npz_restaurant(i["filename"])["Name"]
-                    if restaurant_name in occurrence:
-                        occurrence[restaurant_name] += 1
+                    restaurant_id = self.get_npz_restaurant(i["filename"])
+                    if restaurant_id in occurrence:
+                        occurrence[restaurant_id] += 1
                     else:
-                        occurrence[restaurant_name] = 1
-        print(occurrence)
-        return max(occurrence, key=occurrence.get)
+                        occurrence[restaurant_id] = 1
+        
+        result_restaurant_id = max(occurrence, key=occurrence.get)
+        restaurant_obj = self.restaurants[result_restaurant_id]
+        return (restaurant_obj["Name"], [i for i in restaurant_obj["images"].keys()])
 
     def get_npz_restaurant(self, npz):
         st = npz.replace("npz/", "").replace(".npz", "")
         split = st.split("_")
         restaurant_id = "{}_{}".format(split[0], split[1])
-
-        return self.restaurants[restaurant_id]
+        return restaurant_id
+        #return self.restaurants[restaurant_id]
 
 
         
