@@ -37,7 +37,7 @@ def make_reservation(reservation_date,reservation_time,party_size,restaurant_nam
         chope_url ='https://www.chope.co/singapore-restaurants/category/restaurant/'
         t.init()
         t.url(chope_url)
-        t.wait(5)
+        t.wait(10)
         #Date Field
         t.click(f"(//span[contains(@class,'input-group-addon icon-calendar')])[1]")
         t.wait(10)
@@ -56,7 +56,7 @@ def make_reservation(reservation_date,reservation_time,party_size,restaurant_nam
         t.wait(5)
         
         #Secondary Page to Confirm Timing
-        t.click(f"//a[@rname='{restaurant_name}' and text()='{start_time_option}']")
+        t.click(f"//a[contains(@rname,'{restaurant_name}') and text()='{start_time_option}']")
         t.wait(5)
         t.click(f"//input[@id='btn_sub' and @value='Book Now']")
         t.wait(5)
