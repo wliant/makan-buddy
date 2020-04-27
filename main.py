@@ -27,7 +27,7 @@ def webhook():
     if intent_name == "GetRestaurantInfo" :
         return make_response(GetRestaurantInfo.process(req))
     
-    if intent_name == "GetRestaurantInfo - yes" :
+    if intent_name == "GetRestaurantInfo - yes" or intent_name == "GetRestaurantInfo - yes - askSize"  or intent_name == "GetRestaurantInfo - yes - askDate" or intent_name == "GetRestaurantInfo - yes - askTime" or intent_name == "GetRestaurantInfo - yes - askLastName" or intent_name == "GetRestaurantInfo - yes - askFirstName" or intent_name == "GetRestaurantInfo - yes - askEmail" or intent_name == "GetRestaurantInfo - yes - askPhone":
         return make_response(GetRestaurantInfo.makeReservation(req))
    
     else:
@@ -38,4 +38,4 @@ def webhook():
     return make_response(jsonify({"fulfillmentText": respose_text}))
 
 if __name__ == '__main__':
-    app.run(host='127.0.0.1', port=8080, debug=True)
+    app.run(host='127.0.0.1', port=8080, debug=True) 
