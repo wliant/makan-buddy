@@ -1,5 +1,5 @@
 import requests
-from flask import Flask, request, make_response, jsonify
+from flask import Flask, request, make_response, jsonify,send_file
 from pydialogflow_fulfillment import DialogflowRequest
 from pydialogflow_fulfillment import DialogflowResponse
 from pydialogflow_fulfillment import SimpleResponse, Confirmation, OutputContexts, Suggestions
@@ -36,6 +36,11 @@ def webhook():
 
     # Finally sending this response to Dialogflow.
     return make_response(jsonify({"fulfillmentText": respose_text}))
+
+
+@app.route('/image') 
+def get_image():
+    return send_file(request.args.get('path'), mimetype='image/gif') 
 
 if __name__ == '__main__':
     app.run(host='127.0.0.1', port=8080, debug=True) 

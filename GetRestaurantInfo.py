@@ -4,6 +4,8 @@ import json
 import intelligence
 import MakeReservation
 
+
+
 CONTEXT_ASK_PROGRAMME = "getrestaurantinfo-followup"
 
 CONTEXT_ASK_PROGRAMME_YES = "getrestaurantinfo-yes-followup"
@@ -67,26 +69,43 @@ def process(req):
     for j in range(0, 10):
         id,path = i.get_query()
         i.update_response(id, 3, 0, 0)
-    restaurant_name = i.get_result();
-    
+    restaurant_name = i.get_result()[0];
+    image_url = i.get_result()[1][0]
     res = DialogflowResponse("We are recommanding " + restaurant_name + ", do you want to make a reservation?")
     res.add(SimpleResponse("We are recommanding " + restaurant_name + ", do you want to make a reservation?","We are recommanding " + restaurant_name + ", do you want to make a reservation?"))
     res.add(OutputContexts(req.get_project_id(), req.get_session_id(),CONTEXT_ASK_PROGRAMME,5,{"restaurantName": restaurant_name}))
-    return res.get_final_response()    
+ 
+    res.fulfillment_messages.append({
+        "card": {
+          "title": "We are recommanding " + restaurant_name + ", do you want to make a reservation?", 
+          "imageUri": "https://4c547015.ngrok.io/image?path="+image_url, 
+          "buttons": [ 
+            {
+              "text": "yes",
+              "postback": "yes" 
+
+            }
+          ]
+        },
+        "platform": "SLACK"
+      })
+ 
+    print(res.get_final_response()) 
+    return res.get_final_response()     
     #if isConfirmed == "yes":
     #    print("here proceed to make reservation")
     #    MakeReservation.make_reservation("16/05/2020","1730","2",'Yujin Izakaya','John','Tan','test@gmail.com','98769876')
     # fdreturn DialogflowResponse("We recommand the restaurant "+restaurant_name +", do you want to book a table?").get_final_response()
     
-def makeReservation(req):
+def makeReservation(req): 
     print(req.get_ouputcontext_list())
     params = req.get_parameters()
-    try:
+    try:  
         for con in req.get_ouputcontext_list():
             o_params = con["parameters"]
-            for x in o_params:
-                params[x] = o_params[x]
-    except:
+            for x in o_params: 
+                params[x] = o_params[x] 
+    except: 
         None
 
     print("print params during init "+ str(params)) 
