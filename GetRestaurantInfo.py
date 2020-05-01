@@ -58,11 +58,16 @@ def askPhone(req):
 
 def image_response(req):
     i = intelligence.Intel()
+    # get req queryId parameter
+    queryId = ""
+    # get req value parameter
+    value = ""
+    i.update_response(queryId, value, 0, 0)
     if i.get_query_size() == 5:
         name, images = i.get_result()
-
-    #recommend result
-    return ""
+        # display result
+    else:
+        return process(req)
 def process(req):
     i = intelligence.Intel()
     id, path, restaurant_name = i.get_query()
