@@ -27,10 +27,14 @@ def webhook():
     if intent_name == "GetRestaurantInfo" or intent_name == "ImageResponse": 
         return make_response(GetRestaurantInfo.process(req))
     
+    if intent_name == "Show me":
+        return make_response(GetRestaurantInfo.showResult(req))
+        
     if intent_name == "GetRestaurantInfo - yes" or intent_name == "GetRestaurantInfo - yes - askSize"  or intent_name == "GetRestaurantInfo - yes - askDate" or intent_name == "GetRestaurantInfo - yes - askTime" or intent_name == "GetRestaurantInfo - yes - askLastName" or intent_name == "GetRestaurantInfo - yes - askFirstName" or intent_name == "GetRestaurantInfo - yes - askEmail" or intent_name == "GetRestaurantInfo - yes - askPhone":
         return make_response(GetRestaurantInfo.makeReservation(req))
    
-
+    if intent_name == "GetRestaurantInfo - no":
+        return make_response(GetRestaurantInfo.alternateResult(req))
 
     else:
         respose_text = "No intent matched from fullfilment code." 

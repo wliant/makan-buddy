@@ -6,7 +6,7 @@ from MQKNN import MQKNN
 nn_file = "nearest_neighbors.json"
 restaurant_json_directory = "json"
 d = 1792
-K = 20
+K = 5
 random.seed()
 class Intel:
     def __init__(self):
@@ -74,41 +74,52 @@ class Intel:
         self.write_queries()
 
 
+    def calculate_result(self):
+        neighbors = self.load_neighbors()
+        occurrence = {}
+        data_files = set()
+        query_files = []
+        weights = []
+        for query in self.queries:
+            w = (query["positive"] - query["negative"]) / float(10)
+            if w == 0:
+                continue
+            weights.append(w)
+            query_files.append(query["npz"])
+            nn = neighbors[query["npz"]]
+            for i in nn:
+                data_files.add(i["filename"])
+
+        mqknn = MQKNN(d, K, data_files, query_files, weights)
+        result = mqknn.get_result()
+
+        loaded_results = []
+        for r in result:
+            restaurant_id = self.get_npz_restaurant(r)
+            restaurant_obj = self.restaurants[restaurant_id]
+            loaded_results.append({"name": restaurant_obj["Name"], "images":[i for i in restaurant_obj["images"].keys()]})
+
+        self.queries = []
+        self.write_queries()
+        
+        self.write_results(loaded_results)
+
     def get_result(self):
         loaded_results = self.load_results()
         if len(loaded_results) == 0:
-            neighbors = self.load_neighbors()
-            occurrence = {}
-            data_files = set()
-            query_files = []
-            weights = []
-            for query in self.queries:
-                w = (query["positive"] - query["negative"]) / float(10)
-                if w == 0:
-                    continue
-                weights.append(w)
-                query_files.append(query["npz"])
-                nn = neighbors[query["npz"]]
-                for i in nn:
-                    data_files.add(i["filename"])
+            return None
+        else:
+            returned_result = loaded_results[0]
+            loaded_results = loaded_results[1:]
+            self.write_results(loaded_results)
+            return (returned_result["name"], returned_result["images"])
 
-            mqknn = MQKNN(d, K, data_files, query_files, weights)
-            result = mqknn.get_result()
-
-            loaded_results = []
-            for r in result:
-                restaurant_id = self.get_npz_restaurant(r)
-                restaurant_obj = self.restaurants[restaurant_id]
-                loaded_results.append({"name": restaurant_obj["Name"], "images":[i for i in restaurant_obj["images"].keys()]})
-
-            self.queries = []
-            self.write_queries()
-        
-        returned_result = loaded_results[0]
-        loaded_results = loaded_results[1:]
-        self.write_results(loaded_results)
-        
-        return (returned_result["name"], returned_result["images"])
+    def restart_query(self):
+        self.queries = []
+        self.write_queries()
+    def has_result(self):
+        loaded_results = self.load_results()
+        return len(loaded_results) > 0
     def get_query_size(self):
         return len(self.queries)
     def get_npz_restaurant(self, npz):

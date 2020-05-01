@@ -3,8 +3,10 @@ from pydialogflow_fulfillment import SimpleResponse, Confirmation, OutputContext
 import json
 import intelligence
 import MakeReservation
+from multiprocessing import Pool
 
 
+server_url = "https://f7dfe82c.ngrok.io"
 
 CONTEXT_ASK_PROGRAMME = "getrestaurantinfo-followup" 
 
@@ -56,83 +58,35 @@ def askPhone(req):
     res.add(OutputContexts(req.get_project_id(), req.get_session_id(),CONTEXT_ASK_PROGRAMME_YES,5,req.get_parameters()))
     return res.get_final_response()
 
-def image_response(req): 
-    i = intelligence.Intel()
-    # get req queryId parameter
-    queryId = int(req.get_parameters()["queryId"])
-    # get req value parameter
-    value = int(req.get_parameters()["value"])
-    i.update_response(queryId, value, 0, 0)
-     
-    print("session id from image response"+req.get_session_id())
-    
-    print(i.get_query_size())
-    if i.get_query_size() >= 5:
-        print("session id from result"+req.get_session_id())
-
-        restaurant_name, image_url = i.get_result()
-        res = DialogflowResponse("We are recommanding " + restaurant_name + ", do you want to make a reservation?")
-     
-        res.fulfillment_messages.append({  
-            "card": {
-            "title": "We are recommanding " + restaurant_name + ", do you want to make a reservation?", 
-            "imageUri": "https://c3e9ae46.ngrok.io/image?path="+image_url[0],
-            "buttons": [ 
-                {
-                "text": "yes", 
-                "postback": "yes:"+restaurant_name 
- 
-                } 
-            ]
-            },
-            "platform": "SLACK" 
-
-        })
-    
-        print(res.get_final_response()) 
-        return res.get_final_response()     
-        # display result
-    else:
-        print("reach process")
-        return process(req)
 def process(req):
     print("session id from process"+req.get_session_id()) 
     i = intelligence.Intel()
-        # get req queryId parameter
-        
     if req.get_intent_displayName() == "ImageResponse" :
         queryId = int(req.get_parameters()["queryId"])
         # get req value parameter
         value = int(req.get_parameters()["value"])
         i.update_response(queryId, value, 0, 0)
+    else:
+        i.restart_query()
             
-   
-     
     print("session id from image response"+req.get_session_id())
     
     print(i.get_query_size())
     if i.get_query_size() >= 5:
-        print("session id from result"+req.get_session_id())
-
-        restaurant_name, image_url = i.get_result()
-        res = DialogflowResponse("We are recommanding " + restaurant_name + ", do you want to make a reservation?")
+        id, path, restaurant_name = i.get_query()
      
-        res.fulfillment_messages.append({  
-            "card": {
-            "title": "We are recommanding " + restaurant_name + ", do you want to make a reservation?", 
-            "imageUri": "https://c3e9ae46.ngrok.io/image?path="+image_url[0],
-            "buttons": [ 
-                {
-                "text": "yes", 
-                "postback": "yes:"+restaurant_name 
- 
-                } 
-            ]
-            },
-            "platform": "SLACK" 
-
-        })
-    
+        res = DialogflowResponse("We are recommanding " + restaurant_name + ", please rate 1 - 5?")
+        res.fulfillment_messages.append({
+                "text": {
+                    "text": [
+                        "We are looking for the best restaurant for you. Please type \"Show me\" in 1 minute to show the result"
+                    ]
+                },
+                "platform": "SLACK"
+            })
+        pool = Pool(processes=1)
+        pool.apply_async(i.calculate_result)
+       
         print(res.get_final_response()) 
         return res.get_final_response() 
     else:
@@ -142,27 +96,27 @@ def process(req):
         res.fulfillment_messages.append({
             "card": { 
               "title": "We are recommanding " + restaurant_name + ", please rate 1 - 5?", 
-              "imageUri": "https://c3e9ae46.ngrok.io/image?path="+path, 
+              "imageUri": "{}/image?path={}".format(server_url, path), 
               "buttons": [ 
                 {  
-                  "text": 5,
-                  "postback": "ImageResponse queryId {} value {}".format(id, 5) 
+                  "text": 1,
+                  "postback": "ImageResponse queryId {} value {}".format(id, 1) 
                 },
                 { 
-                  "text": 4, 
-                  "postback": "ImageResponse queryId {} value {}".format(id, 4) 
+                  "text": 2, 
+                  "postback": "ImageResponse queryId {} value {}".format(id, 2) 
                 }, 
                 { 
                   "text": 3,
                   "postback": "ImageResponse queryId {} value {}".format(id, 3) 
                 }, 
                 {
-                  "text": 2, 
-                  "postback": "ImageResponse queryId {} value {}".format(id, 2) 
+                  "text": 4, 
+                  "postback": "ImageResponse queryId {} value {}".format(id, 4) 
                 },
                 {
-                  "text": 1,
-                  "postback": "ImageResponse queryId {} value {}".format(id, 1) 
+                  "text": 5,
+                  "postback": "ImageResponse queryId {} value {}".format(id, 5) 
                 }
               ]
             },
@@ -170,12 +124,88 @@ def process(req):
           })  
        
         print(res.get_final_response()) 
-        return res.get_final_response()     
-    #if isConfirmed == "yes":
-    #    print("here proceed to make reservation")
-    #    MakeReservation.make_reservation("16/05/2020","1730","2",'Yujin Izakaya','John','Tan','test@gmail.com','98769876')
-    # fdreturn DialogflowResponse("We recommand the restaurant "+restaurant_name +", do you want to book a table?").get_final_response()
-    
+        return res.get_final_response()   
+
+def showResult(req):
+    i = intelligence.Intel()
+
+    if i.has_result():
+        restaurant_name, image_url = i.get_result()
+        res = DialogflowResponse("We are recommanding " + restaurant_name + ", do you want to make a reservation?")
+        res.add(OutputContexts(req.get_project_id(), req.get_session_id(),CONTEXT_ASK_PROGRAMME,5,req.get_parameters()))
+        res.fulfillment_messages.append({  
+            "card": {
+            "title": "We are recommanding " + restaurant_name + ", do you want to make a reservation?", 
+            "imageUri": "{}/image?path={}".format(server_url,image_url[0]),
+            "buttons": [ 
+                {
+                "text": "yes", 
+                "postback": "yes:"+restaurant_name 
+                },
+                {
+                    "text": "no",
+                    "postback": "no"
+                }
+            ]
+            },
+            "platform": "SLACK" 
+        })
+        res.fulfillment_messages.append({  
+            "text": {
+                "text": [
+                    "or you can type \"Find a restaurant\" to start again"
+                ]
+            },
+            "platform": "SLACK"
+        })
+    else:
+        res = DialogflowResponse("No result found.")
+        res.fulfillment_messages.append({  
+                "text": {
+                    "text": [
+                        "No result found. You may type \"Find a restaurant\" to get another recommendation."
+                    ]
+                },
+                "platform": "SLACK"
+        })
+    print(res.get_final_response()) 
+    return res.get_final_response() 
+def alternateResult(req):
+    i = intelligence.Intel()
+    if i.has_result():
+        restaurant_name, image_url = i.get_result()
+        res = DialogflowResponse("How about " + restaurant_name + ", do you want to make a reservation?")
+        res.add(OutputContexts(req.get_project_id(), req.get_session_id(),CONTEXT_ASK_PROGRAMME,5,req.get_parameters()))
+        res.fulfillment_messages.append({  
+                "card": {
+                "title": "How about " + restaurant_name + ", do you want to make a reservation?", 
+                "imageUri": "{}/image?path={}".format(server_url,image_url[0]),
+                "buttons": [ 
+                    {
+                    "text": "yes", 
+                    "postback": "yes:"+restaurant_name 
+                    },
+                    {
+                        "text": "no",
+                        "postback": "no"
+                    }
+                ]
+                },
+                "platform": "SLACK" 
+            })
+ 
+    else:
+        res = DialogflowResponse("Thanks! You may type \"Find a restaurant\" to get another recommendation.")
+        res.fulfillment_messages.append({
+                "text": {
+                    "text": [
+                        "Thanks! You may type \"Find a restaurant\" to get another recommendation."
+                    ]
+                },
+                "platform": "SLACK"
+            })
+    print(res.get_final_response()) 
+    return res.get_final_response()
 def makeReservation(req):
     params = req.get_parameters()
     try:  
