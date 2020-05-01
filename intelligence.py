@@ -65,7 +65,7 @@ class Intel:
 
         self.queries.append({"npz": rand_image[1], "path": rand_image[0], "positive": 0, "neutral": 0, "negative": 0})
         self.write_queries()
-        return len(self.queries), rand_image[0]
+        return len(self.queries), rand_image[0], rand_res[1]["Name"]
 
     def update_response(self, image_id, positive, neutral, negative):
         self.queries[image_id-1]["positive"] = positive

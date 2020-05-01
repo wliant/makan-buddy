@@ -73,7 +73,7 @@ def image_response(req):
     return ""
 def process(req):
     i = intelligence.Intel()
-    id, path = i.get_query()
+    id, path, restaurant_name = i.get_query()
 
     image_url = i.get_result()[1][0]
     res = DialogflowResponse("We are recommanding " + restaurant_name + ", please rate 1 - 5?")
