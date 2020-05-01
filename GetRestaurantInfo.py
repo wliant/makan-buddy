@@ -10,30 +10,22 @@ CONTEXT_ASK_PROGRAMME = "getrestaurantinfo-followup"
 
 CONTEXT_ASK_PROGRAMME_YES = "getrestaurantinfo-yes-followup"
 
-reservation_date = "16/07/2020"
-reservation_time = "1730"
-party_size = "2"
-first_name = 'John'
-last_name='Tan'
-email_address = 'test@gmail.com'
-phone_number = '98769876'
-
 def has_params(theKey, params):
     return theKey in params and params[theKey] != ""
 
-def askDate(req):
+def askDate(req):  
     res = DialogflowResponse("What is the date you are looking at?(e.g Date:dd/mm/yyyy)")
     print(req.get_parameters())
     res.add(SimpleResponse("What is the date you are looking at?(e.g Date:dd/mm/yyyy)","What is the date you are looking at?(e.g Date:dd/mm/yyyy)"))
     res.add(OutputContexts(req.get_project_id(), req.get_session_id(),CONTEXT_ASK_PROGRAMME_YES,5,req.get_parameters()))
-    return res.get_final_response()
+    return res.get_final_response() 
 
 def askTime(req):
     res = DialogflowResponse("How about the time?(e.g Time:1730)")
     res.add(SimpleResponse("How about the time?(e.g Time:1730)","How about the time?(e.g Time:1730)"))
     res.add(OutputContexts(req.get_project_id(), req.get_session_id(),CONTEXT_ASK_PROGRAMME_YES,5,req.get_parameters()))
     return res.get_final_response()
-
+ 
 def askPartySize(req):
     res = DialogflowResponse("How many people?")
     res.add(SimpleResponse("How many people?","How many people?"))
@@ -106,9 +98,9 @@ def process(req):
               "postback": "ImageResponse queryId {} value {}".format(id, 1) 
             }
           ]
-        },
+        }, 
         "platform": "SLACK"
-      })
+      }) 
  
     print(res.get_final_response()) 
     return res.get_final_response()     
@@ -117,12 +109,11 @@ def process(req):
     #    MakeReservation.make_reservation("16/05/2020","1730","2",'Yujin Izakaya','John','Tan','test@gmail.com','98769876')
     # fdreturn DialogflowResponse("We recommand the restaurant "+restaurant_name +", do you want to book a table?").get_final_response()
     
-def makeReservation(req): 
-    print(req.get_ouputcontext_list())
+def makeReservation(req):
     params = req.get_parameters()
     try:  
-        for con in req.get_ouputcontext_list():
-            o_params = con["parameters"]
+        for con in req.get_ouputcontext_list(): 
+            o_params = con["parameters"] 
             for x in o_params: 
                 params[x] = o_params[x] 
     except: 
@@ -146,8 +137,7 @@ def makeReservation(req):
     if not has_params("phoneNumber", params):
         return askPhone(req) 
 
-
-    print(params)
+ 
     restaurant_name = "" if "restaurantName" not in params else params["restaurantName"]     
     reservation_date = "" if "date" not in params else params["date.original"] 
     reservation_time = "" if "time" not in params else params["time.original"]
