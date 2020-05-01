@@ -6,7 +6,7 @@ import glob
 import numpy as np
 
 npz_dimension = 1792
-n_nearest_neighbors = 20
+n_nearest_neighbors = 200
 trees = 10000
 
 allfiles = glob.glob('npz/*.npz')

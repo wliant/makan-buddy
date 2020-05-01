@@ -1,16 +1,19 @@
 import json
 import os
 import random
+from MQKNN import MQKNN
 
 nn_file = "nearest_neighbors.json"
 restaurant_json_directory = "json"
+d = 1792
+K = 20
 random.seed()
 class Intel:
     def __init__(self):
         self.queries = []
         self.restaurants = self.load_restaurants()
         print("number of restaurants: {}", len(self.restaurants))
-        self.neighbors = self.load_neighbors()
+        #self.neighbors = self.load_neighbors()
         self.queries = []
     def load_restaurants(self):
         results = {}
@@ -47,21 +50,28 @@ class Intel:
         self.queries[image_id-1]["negative"] = negative
 
     def get_result(self):
+        neighbors = self.load_neighbors()
         occurrence = {}
+        data_files = set()
+        query_files = []
+        weights = []
         for query in self.queries:
-            if query["positive"] > 0:
-                nn = self.neighbors[query["npz"]]
-                for i in nn:
-                    restaurant_id = self.get_npz_restaurant(i["filename"])
-                    if restaurant_id in occurrence:
-                        occurrence[restaurant_id] += 1
-                    else:
-                        occurrence[restaurant_id] = 1
-        
-        result_restaurant_id = max(occurrence, key=occurrence.get)
-        restaurant_obj = self.restaurants[result_restaurant_id]
-        return (restaurant_obj["Name"], [i for i in restaurant_obj["images"].keys()])
+            weights.append(query["positive"] / float(query["positive"] + query["neutral"] + query["negative"]))
+            query_files.append(query["npz"])
+            nn = neighbors[query["npz"]]
+            for i in nn:
+                data_files.add(i["filename"])
 
+        mqknn = MQKNN(d, K, data_files, query_files, weights)
+        result = mqknn.get_result()
+
+        results = []
+        for r in result:
+            restaurant_id = self.get_npz_restaurant(r)
+            restaurant_obj = self.restaurants[restaurant_id]
+            results.append((restaurant_obj["Name"], [i for i in restaurant_obj["images"].keys()]))
+
+        return results[0]
     def get_npz_restaurant(self, npz):
         st = npz.replace("npz/", "").replace(".npz", "")
         split = st.split("_")
@@ -72,10 +82,12 @@ class Intel:
 
         
 
-i = Intel()
-for j in range(0, 10):
+#i = Intel()
+#print("init complete")
+#for j in range(0, 5):
     #print(i.get_query())
-    id,path = i.get_query()
-    i.update_response(id, 3, 0, 0)
+#    id,path = i.get_query()
+#    i.update_response(id, 3, 0, 0)
 
-print(i.get_result())
+#print("getting result")
+#print(i.get_result())
