@@ -23,24 +23,23 @@ def webhook():
     req = DialogflowRequest(request.data)
     intent_name = req.get_intent_displayName()
     print("here to print intent_name "+ intent_name)
-
-    if intent_name == "GetRestaurantInfo" :
+    
+    if intent_name == "GetRestaurantInfo" or intent_name == "ImageResponse": 
         return make_response(GetRestaurantInfo.process(req))
     
     if intent_name == "GetRestaurantInfo - yes" or intent_name == "GetRestaurantInfo - yes - askSize"  or intent_name == "GetRestaurantInfo - yes - askDate" or intent_name == "GetRestaurantInfo - yes - askTime" or intent_name == "GetRestaurantInfo - yes - askLastName" or intent_name == "GetRestaurantInfo - yes - askFirstName" or intent_name == "GetRestaurantInfo - yes - askEmail" or intent_name == "GetRestaurantInfo - yes - askPhone":
         return make_response(GetRestaurantInfo.makeReservation(req))
    
-    if intent_name == "ImageResponse":
-        return make_response(GetRestaurantInfo.image_response(req))
+
 
     else:
-        respose_text = "No intent matched from fullfilment code."
+        respose_text = "No intent matched from fullfilment code." 
     # Branching ends here
-
+    
     # Finally sending this response to Dialogflow.
     return make_response(jsonify({"fulfillmentText": respose_text}))
 
-
+  
 @app.route('/image') 
 def get_image():
     return send_file(request.args.get('path'), mimetype='image/gif') 
