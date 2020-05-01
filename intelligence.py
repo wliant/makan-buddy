@@ -100,6 +100,7 @@ class Intel:
                 restaurant_id = self.get_npz_restaurant(r)
                 restaurant_obj = self.restaurants[restaurant_id]
                 loaded_results.append({"name": restaurant_obj["Name"], "images":[i for i in restaurant_obj["images"].keys()]})
+
             self.queries = []
             self.write_queries()
         
@@ -108,7 +109,8 @@ class Intel:
         self.write_results(loaded_results)
         
         return (returned_result["name"], returned_result["images"])
-
+    def get_query_size(self):
+        return len(self.queries)
     def get_npz_restaurant(self, npz):
         st = npz.replace("npz/", "").replace(".npz", "")
         split = st.split("_")

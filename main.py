@@ -30,6 +30,9 @@ def webhook():
     if intent_name == "GetRestaurantInfo - yes" or intent_name == "GetRestaurantInfo - yes - askSize"  or intent_name == "GetRestaurantInfo - yes - askDate" or intent_name == "GetRestaurantInfo - yes - askTime" or intent_name == "GetRestaurantInfo - yes - askLastName" or intent_name == "GetRestaurantInfo - yes - askFirstName" or intent_name == "GetRestaurantInfo - yes - askEmail" or intent_name == "GetRestaurantInfo - yes - askPhone":
         return make_response(GetRestaurantInfo.makeReservation(req))
    
+    if intent_name == "ImageResponse":
+        return make_response(GetRestaurantInfo.image_response(req))
+
     else:
         respose_text = "No intent matched from fullfilment code."
     # Branching ends here

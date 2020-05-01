@@ -64,26 +64,46 @@ def askPhone(req):
     res.add(OutputContexts(req.get_project_id(), req.get_session_id(),CONTEXT_ASK_PROGRAMME_YES,5,req.get_parameters()))
     return res.get_final_response()
 
+def image_response(req):
+    i = intelligence.Intel()
+    if i.get_query_size() == 5:
+        name, images = i.get_result()
+
+    #recommend result
+    return ""
 def process(req):
     i = intelligence.Intel()
-    for j in range(0, 10):
-        id,path = i.get_query()
-        i.update_response(id, 3, 0, 0)
-    restaurant_name = i.get_result()[0];
+    id, path = i.get_query()
+
     image_url = i.get_result()[1][0]
-    res = DialogflowResponse("We are recommanding " + restaurant_name + ", do you want to make a reservation?")
-    res.add(SimpleResponse("We are recommanding " + restaurant_name + ", do you want to make a reservation?","We are recommanding " + restaurant_name + ", do you want to make a reservation?"))
+    res = DialogflowResponse("We are recommanding " + restaurant_name + ", please rate 1 - 5?")
+    res.add(SimpleResponse("We are recommanding " + restaurant_name + ", please rate 1 - 5?","We are recommanding " + restaurant_name + ", do you want to make a reservation?"))
     res.add(OutputContexts(req.get_project_id(), req.get_session_id(),CONTEXT_ASK_PROGRAMME,5,{"restaurantName": restaurant_name}))
  
     res.fulfillment_messages.append({
         "card": {
-          "title": "We are recommanding " + restaurant_name + ", do you want to make a reservation?", 
+          "title": "We are recommanding " + restaurant_name + ", please rate 1 - 5?", 
           "imageUri": "https://4c547015.ngrok.io/image?path="+image_url, 
           "buttons": [ 
             {
-              "text": "yes",
-              "postback": "yes" 
-
+              "text": 5,
+              "postback": "ImageResponse queryId {} value {}".format(id, 5) 
+            },
+            {
+              "text": 4,
+              "postback": "ImageResponse queryId {} value {}".format(id, 4) 
+            },
+            {
+              "text": 3,
+              "postback": "ImageResponse queryId {} value {}".format(id, 3) 
+            },
+            {
+              "text": 2,
+              "postback": "ImageResponse queryId {} value {}".format(id, 2) 
+            },
+            {
+              "text": 1,
+              "postback": "ImageResponse queryId {} value {}".format(id, 1) 
             }
           ]
         },
