@@ -98,11 +98,10 @@ class Intel:
             restaurant_id = self.get_npz_restaurant(r)
             restaurant_obj = self.restaurants[restaurant_id]
             loaded_results.append({"name": restaurant_obj["Name"], "images":[i for i in restaurant_obj["images"].keys()]})
-
         self.queries = []
         self.write_queries()
-        
         self.write_results(loaded_results)
+        print("calculation complete")
 
     def get_result(self):
         loaded_results = self.load_results()

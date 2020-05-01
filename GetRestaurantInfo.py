@@ -150,14 +150,6 @@ def showResult(req):
             },
             "platform": "SLACK" 
         })
-        res.fulfillment_messages.append({  
-            "text": {
-                "text": [
-                    "or you can type \"Find a restaurant\" to start again"
-                ]
-            },
-            "platform": "SLACK"
-        })
     else:
         res = DialogflowResponse("No result found.")
         res.fulfillment_messages.append({  
@@ -193,6 +185,14 @@ def alternateResult(req):
                 },
                 "platform": "SLACK" 
             })
+        res.fulfillment_messages.append({  
+            "text": {
+                "text": [
+                    "or you can type \"Find a restaurant\" to start again"
+                ]
+            },
+            "platform": "SLACK"
+        })
  
     else:
         res = DialogflowResponse("Thanks! You may type \"Find a restaurant\" to get another recommendation.")
