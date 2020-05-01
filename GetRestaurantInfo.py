@@ -6,7 +6,7 @@ import MakeReservation
 
 
 
-CONTEXT_ASK_PROGRAMME = "getrestaurantinfo-followup"
+CONTEXT_ASK_PROGRAMME = "getrestaurantinfo-followup" 
 
 CONTEXT_ASK_PROGRAMME_YES = "getrestaurantinfo-yes-followup"
 
@@ -56,78 +56,84 @@ def askPhone(req):
     res.add(OutputContexts(req.get_project_id(), req.get_session_id(),CONTEXT_ASK_PROGRAMME_YES,5,req.get_parameters()))
     return res.get_final_response()
 
-def image_response(req):
+def image_response(req): 
     i = intelligence.Intel()
     # get req queryId parameter
-    queryId = ""
+    queryId = int(req.get_parameters()["queryId"])
     # get req value parameter
-    value = ""
+    value = int(req.get_parameters()["value"])
     i.update_response(queryId, value, 0, 0)
-    if i.get_query_size() == 5:
+     
+    print("session id from image response"+req.get_session_id())
+    
+    print(i.get_query_size())
+    if i.get_query_size() >= 5:
+        print("session id from result"+req.get_session_id())
+
         restaurant_name, image_url = i.get_result()
         res = DialogflowResponse("We are recommanding " + restaurant_name + ", do you want to make a reservation?")
-        res.add(SimpleResponse("We are recommanding " + restaurant_name + ", do you want to make a reservation?","We are recommanding " + restaurant_name + ", do you want to make a reservation?"))
-        res.add(OutputContexts(req.get_project_id(), req.get_session_id(),CONTEXT_ASK_PROGRAMME,5,{"restaurantName": restaurant_name}))
-    
-        res.fulfillment_messages.append({
+     
+        res.fulfillment_messages.append({  
             "card": {
             "title": "We are recommanding " + restaurant_name + ", do you want to make a reservation?", 
-            "imageUri": "https://4c547015.ngrok.io/image?path="+image_url, 
+            "imageUri": "https://c3e9ae46.ngrok.io/image?path="+image_url[0],
             "buttons": [ 
                 {
                 "text": "yes",
-                "postback": "yes" 
-
+                "postback": "yes:"+restaurant_name 
+ 
                 }
             ]
             },
-            "platform": "SLACK"
-        })
+            "platform": "SLACK",
+            "type": 1
+
+        }) 
     
         print(res.get_final_response()) 
         return res.get_final_response()     
         # display result
     else:
+        print("reach process") 
         return process(req)
 def process(req):
+    print("session id from process"+req.get_session_id()) 
     i = intelligence.Intel()
     id, path, restaurant_name = i.get_query()
-
-    image_url = i.get_result()[1][0]
-    res = DialogflowResponse("We are recommanding " + restaurant_name + ", please rate 1 - 5?")
-    res.add(SimpleResponse("We are recommanding " + restaurant_name + ", please rate 1 - 5?","We are recommanding " + restaurant_name + ", do you want to make a reservation?"))
-    res.add(OutputContexts(req.get_project_id(), req.get_session_id(),CONTEXT_ASK_PROGRAMME,5,{"restaurantName": restaurant_name}))
  
+    res = DialogflowResponse("We are recommanding " + restaurant_name + ", please rate 1 - 5?")
+    res.add(OutputContexts(req.get_project_id(), req.get_session_id(),CONTEXT_ASK_PROGRAMME,5,req.get_parameters()))
     res.fulfillment_messages.append({
-        "card": {
+        "card": { 
           "title": "We are recommanding " + restaurant_name + ", please rate 1 - 5?", 
-          "imageUri": "https://4c547015.ngrok.io/image?path="+image_url, 
+          "imageUri": "https://c3e9ae46.ngrok.io/image?path="+path, 
           "buttons": [ 
-            {
+            {  
               "text": 5,
               "postback": "ImageResponse queryId {} value {}".format(id, 5) 
             },
-            {
-              "text": 4,
+            { 
+              "text": 4, 
               "postback": "ImageResponse queryId {} value {}".format(id, 4) 
-            },
-            {
+            }, 
+            { 
               "text": 3,
               "postback": "ImageResponse queryId {} value {}".format(id, 3) 
-            },
+            }, 
             {
-              "text": 2,
+              "text": 2, 
               "postback": "ImageResponse queryId {} value {}".format(id, 2) 
             },
             {
               "text": 1,
               "postback": "ImageResponse queryId {} value {}".format(id, 1) 
             }
-          ]
-        }, 
-        "platform": "SLACK"
-      }) 
- 
+          ] 
+        },  
+        "platform": "SLACK",
+        "type": 1
+      })  
+  
     print(res.get_final_response()) 
     return res.get_final_response()     
     #if isConfirmed == "yes":
