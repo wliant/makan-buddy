@@ -15,3 +15,5 @@ tagui_local.js
 rpa_python.log
 sub-npz/*
 .ipynb_checkpoints/
+queries.json
+results.json
