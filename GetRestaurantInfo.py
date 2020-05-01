@@ -64,7 +64,28 @@ def image_response(req):
     value = ""
     i.update_response(queryId, value, 0, 0)
     if i.get_query_size() == 5:
-        name, images = i.get_result()
+        restaurant_name, image_url = i.get_result()
+        res = DialogflowResponse("We are recommanding " + restaurant_name + ", do you want to make a reservation?")
+        res.add(SimpleResponse("We are recommanding " + restaurant_name + ", do you want to make a reservation?","We are recommanding " + restaurant_name + ", do you want to make a reservation?"))
+        res.add(OutputContexts(req.get_project_id(), req.get_session_id(),CONTEXT_ASK_PROGRAMME,5,{"restaurantName": restaurant_name}))
+    
+        res.fulfillment_messages.append({
+            "card": {
+            "title": "We are recommanding " + restaurant_name + ", do you want to make a reservation?", 
+            "imageUri": "https://4c547015.ngrok.io/image?path="+image_url, 
+            "buttons": [ 
+                {
+                "text": "yes",
+                "postback": "yes" 
+
+                }
+            ]
+            },
+            "platform": "SLACK"
+        })
+    
+        print(res.get_final_response()) 
+        return res.get_final_response()     
         # display result
     else:
         return process(req)
