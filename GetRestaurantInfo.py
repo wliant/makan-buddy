@@ -7,8 +7,11 @@ import MakeReservation
 
 
 CONTEXT_ASK_PROGRAMME = "getrestaurantinfo-followup" 
+CONTEXT_RATE_IMAGE = "rate-image"
 
 CONTEXT_ASK_PROGRAMME_YES = "getrestaurantinfo-yes-followup"
+
+server_path = "https://f7dfe82c.ngrok.io"
 
 def has_params(theKey, params):
     return theKey in params and params[theKey] != ""
@@ -56,6 +59,42 @@ def askPhone(req):
     res.add(OutputContexts(req.get_project_id(), req.get_session_id(),CONTEXT_ASK_PROGRAMME_YES,5,req.get_parameters()))
     return res.get_final_response()
 
+def rate_image(req):
+    i = intelligence.Intel()
+    qs = i.get_query_size()
+    value = int(req.get_parameters()["value"])
+    i.update_response(qs-1, value, 0, 0)
+    if i.get_query_size() >= 5:
+        print("session id from result"+req.get_session_id())
+
+        restaurant_name, image_url = i.get_result()
+        res = DialogflowResponse("We are recommanding " + restaurant_name + ", do you want to make a reservation?")
+     
+        res.fulfillment_messages.append({  
+            "card": {
+            "title": "We are recommanding " + restaurant_name + ", do you want to make a reservation?", 
+            "imageUri": "{}/image?path={}".format(server_path, image_url[0]),
+            "buttons": [ 
+                {
+                "text": "yes",
+                "postback": "yes:"+restaurant_name 
+ 
+                }
+            ]
+            },
+            "platform": "SLACK",
+            "type": 1
+
+        }) 
+    
+        print(res.get_final_response()) 
+        return res.get_final_response()     
+        # display result
+    else:
+        print("reach process") 
+        return process(req)
+
+
 def image_response(req): 
     i = intelligence.Intel()
     # get req queryId parameter
@@ -76,7 +115,7 @@ def image_response(req):
         res.fulfillment_messages.append({  
             "card": {
             "title": "We are recommanding " + restaurant_name + ", do you want to make a reservation?", 
-            "imageUri": "https://c3e9ae46.ngrok.io/image?path="+image_url[0],
+            "imageUri": "{}/image?path={}".format(server_path, image_url[0]),
             "buttons": [ 
                 {
                 "text": "yes",
@@ -103,36 +142,26 @@ def process(req):
  
     res = DialogflowResponse("We are recommanding " + restaurant_name + ", please rate 1 - 5?")
     res.add(OutputContexts(req.get_project_id(), req.get_session_id(),CONTEXT_ASK_PROGRAMME,5,req.get_parameters()))
+    res.add(OutputContexts(req.get_project_id(), req.get_session_id(),CONTEXT_RATE_IMAGE,5,req.get_parameters()))
     res.fulfillment_messages.append({
         "card": { 
-          "title": "We are recommanding " + restaurant_name + ", please rate 1 - 5?", 
-          "imageUri": "https://c3e9ae46.ngrok.io/image?path="+path, 
-          "buttons": [ 
-            {  
-              "text": 5,
-              "postback": "ImageResponse queryId {} value {}".format(id, 5) 
-            },
-            { 
-              "text": 4, 
-              "postback": "ImageResponse queryId {} value {}".format(id, 4) 
-            }, 
-            { 
-              "text": 3,
-              "postback": "ImageResponse queryId {} value {}".format(id, 3) 
-            }, 
-            {
-              "text": 2, 
-              "postback": "ImageResponse queryId {} value {}".format(id, 2) 
-            },
-            {
-              "text": 1,
-              "postback": "ImageResponse queryId {} value {}".format(id, 1) 
-            }
+          "title": "We are recommanding " + restaurant_name + ", please rate 1 - 5?",
+          "imageUri": "{}/image?path={}".format(server_path, path), 
+          "buttons": [
           ] 
         },  
-        "platform": "SLACK",
-        "type": 1
-      })  
+        "platform": "SLACK"
+      })
+    res.fulfillment_messages.append({
+        "quickReplies": {
+            "title": "How do you like the recommendation? Please rate 1 - 5",
+            "quickReplies": [
+                "1", "2", "3", "4", "5"
+            ]
+        }, 
+        "platform": "SLACK"
+      }
+    )  
   
     print(res.get_final_response()) 
     return res.get_final_response()     
