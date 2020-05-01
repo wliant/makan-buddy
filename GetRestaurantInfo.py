@@ -74,7 +74,6 @@ def image_response(req):
         res = DialogflowResponse("We are recommanding " + restaurant_name + ", do you want to make a reservation?")
      
         res.fulfillment_messages.append({  
-            "card": {
             "title": "We are recommanding " + restaurant_name + ", do you want to make a reservation?", 
             "imageUri": "https://c3e9ae46.ngrok.io/image?path="+image_url[0],
             "buttons": [ 
@@ -83,11 +82,9 @@ def image_response(req):
                 "postback": "yes:"+restaurant_name 
  
                 }
-            ]
-            },
+            ],
             "platform": "SLACK",
             "type": 1
-
         }) 
     
         print(res.get_final_response()) 
@@ -104,32 +101,30 @@ def process(req):
     res = DialogflowResponse("We are recommanding " + restaurant_name + ", please rate 1 - 5?")
     res.add(OutputContexts(req.get_project_id(), req.get_session_id(),CONTEXT_ASK_PROGRAMME,5,req.get_parameters()))
     res.fulfillment_messages.append({
-        "card": { 
-          "title": "We are recommanding " + restaurant_name + ", please rate 1 - 5?", 
-          "imageUri": "https://c3e9ae46.ngrok.io/image?path="+path, 
-          "buttons": [ 
-            {  
-              "text": 5,
-              "postback": "ImageResponse queryId {} value {}".format(id, 5) 
-            },
-            { 
-              "text": 4, 
-              "postback": "ImageResponse queryId {} value {}".format(id, 4) 
-            }, 
-            { 
-              "text": 3,
-              "postback": "ImageResponse queryId {} value {}".format(id, 3) 
-            }, 
-            {
-              "text": 2, 
-              "postback": "ImageResponse queryId {} value {}".format(id, 2) 
-            },
-            {
-              "text": 1,
-              "postback": "ImageResponse queryId {} value {}".format(id, 1) 
-            }
-          ] 
-        },  
+        "title": "We are recommanding " + restaurant_name + ", please rate 1 - 5?", 
+        "imageUri": "https://c3e9ae46.ngrok.io/image?path="+path, 
+        "buttons": [ 
+        {  
+            "text": 5,
+            "postback": "ImageResponse queryId {} value {}".format(id, 5) 
+        },
+        { 
+            "text": 4, 
+            "postback": "ImageResponse queryId {} value {}".format(id, 4) 
+        }, 
+        { 
+            "text": 3,
+            "postback": "ImageResponse queryId {} value {}".format(id, 3) 
+        }, 
+        {
+            "text": 2, 
+            "postback": "ImageResponse queryId {} value {}".format(id, 2) 
+        },
+        {
+            "text": 1,
+            "postback": "ImageResponse queryId {} value {}".format(id, 1) 
+        }
+        ],
         "platform": "SLACK",
         "type": 1
       })  
