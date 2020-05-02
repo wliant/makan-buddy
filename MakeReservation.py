@@ -22,11 +22,11 @@ def check_availability(reservation_date,reservation_time,party_size,restaurant_n
             start_time_option = str(start_time_hr)+":"+reservation_time[2:4]+" pm"
         else:
             start_time_option = str(start_time_hr)+":"+reservation_time[2:4]+" am"
-            
+             
         #Booking Parameters
         chope_url ='https://www.chope.co/singapore-restaurants/category/restaurant/'
         t.init()
-        t.url(chope_url)
+        t.url(chope_url) 
         t.wait(10)
         #Date Field
         t.click(f"(//span[contains(@class,'input-group-addon icon-calendar')])[1]")
