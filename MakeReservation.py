@@ -7,15 +7,57 @@ Created on Wed Apr 15 20:42:33 2020
 
 import tagui as t
 
-#Sample Values
-reservation_date = "16/09/2020"
-reservation_time = "1730"
-party_size = "2"
-restaurant_name ='Kith Cafe'
-first_name = 'John'
-last_name='Tan'
-email_address = 'test@gmail.com'
-phone_number = '98769876'
+def check_availability(reservation_date,reservation_time,party_size,restaurant_name):
+    try:
+        #Convert User Defined Values to System Usable Values
+        reservation_day=reservation_date.split('/')[0]
+        reservation_month =reservation_date.split('/')[1]
+        reservation_month=int(reservation_month)-1
+        reservation_year =reservation_date.split('/')[2]
+        reservation_time_int=int(reservation_time)
+        start_time_hr= reservation_time[:2]
+        if reservation_time_int>1159:
+            if start_time_hr!="12":
+                start_time_hr=int(start_time_hr)-12
+            start_time_option = str(start_time_hr)+":"+reservation_time[2:4]+" pm"
+        else:
+            start_time_option = str(start_time_hr)+":"+reservation_time[2:4]+" am"
+            
+        #Booking Parameters
+        chope_url ='https://www.chope.co/singapore-restaurants/category/restaurant/'
+        t.init()
+        t.url(chope_url)
+        t.wait(10)
+        #Date Field
+        t.click(f"(//span[contains(@class,'input-group-addon icon-calendar')])[1]")
+        t.wait(7)
+        boolean_flag=1
+        while boolean_flag:
+            if t.present(f"//td[@data-handler='selectDay'and @data-year='{reservation_year}' and @data-month='{reservation_month}']/a[text()='{reservation_day}']"):
+                t.click(f"//td[@data-handler='selectDay'and @data-year='{reservation_year}' and @data-month='{reservation_month}']/a[text()='{reservation_day}']")
+                boolean_flag=0
+            else:
+                t.click('//a[@title="Next"]')
+        t.click(f"//td[@data-handler='selectDay'and @data-month='{reservation_month}']/a[text()='{reservation_day}']")
+        #Time Field
+        t.select(f"//select[contains(@id,'time-field')]",start_time_option)
+        #Number of Diners Field
+        t.click(f"(//span[contains(@class,'input-group-addon icon-person')])[1]")
+        t.select(f"//select[contains(@id,'adults')]",party_size)
+        #Restaurant Field
+        t.type(f"//select[contains(@id,'sb-sel-restaurant')]",restaurant_name)
+        t.click('//button[@id="btn-search"]')
+        t.wait(5)
+        if t.present(f"//div[@class='alert alert-danger']"):
+            print('Not Available')
+            return 0
+        else:
+            print ('Available')
+            return 1
+    except:
+        print('Error')
+        return 'Reservation Unsuccessful. Unforunately, the restaurant was not able to accomodate your reservation.'
+        
     
 def make_reservation(reservation_date,reservation_time,party_size,restaurant_name,first_name,last_name,email_address,phone_number):
     try:
@@ -85,7 +127,7 @@ def make_reservation(reservation_date,reservation_time,party_size,restaurant_nam
         return 'Reservation Successful'
     except:
         print('Error')
-        return 'Reservation Unsuccessful. Unforunately, the restaurant was no able to accomodate your reservation.'
+        return 'Reservation Unsuccessful. Unforunately, the restaurant was not able to accomodate your reservation.'
         
         
 #make_reservation(reservation_date,reservation_time,party_size,restaurant_name,first_name,last_name,email_address,phone_number)
