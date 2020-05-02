@@ -6,7 +6,7 @@ from MQKNN import MQKNN
 nn_file = "nearest_neighbors.json"
 restaurant_json_directory = "json"
 d = 1792
-K = 5
+K = 30
 random.seed()
 class Intel:
     def __init__(self):
@@ -81,7 +81,7 @@ class Intel:
         query_files = []
         weights = []
         for query in self.queries:
-            w = (query["positive"] - query["negative"]) / float(10)
+            w = query["positive"] / float(5)
             if w == 0:
                 continue
             weights.append(w)
@@ -103,15 +103,33 @@ class Intel:
         self.write_results(loaded_results)
         print("calculation complete")
 
+    def load_valid_restaurants(self):
+        with open("valid_restaurants.json", "r", encoding="utf-8") as jsonfile:
+            result = json.load(jsonfile)
+        return result
     def get_result(self):
         loaded_results = self.load_results()
         if len(loaded_results) == 0:
             return None
         else:
             returned_result = loaded_results[0]
+            name = returned_result["name"]
+            images = returned_result["images"]
+            valid_restaurants = self.load_valid_restaurants()
             loaded_results = loaded_results[1:]
+            while name not in valid_restaurants:
+                if len(loaded_results) == 0:
+                    self.write_results(loaded_results)
+                    return None
+                returned_result = loaded_results[0]
+                name = returned_result["name"]
+                images = returned_result["images"]
+                valid_restaurants = self.load_valid_restaurants()
+                loaded_results = loaded_results[1:]
+
+            
             self.write_results(loaded_results)
-            return (returned_result["name"], returned_result["images"])
+            return (name, images)
 
     def restart_query(self):
         self.queries = []
