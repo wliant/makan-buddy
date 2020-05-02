@@ -6,7 +6,7 @@ import MakeReservation
 from multiprocessing import Pool
 
 
-server_url = "https://f7dfe82c.ngrok.io"
+server_url = "https://043ef1bf.ngrok.io"
 
 CONTEXT_ASK_PROGRAMME = "getrestaurantinfo-followup" 
 
@@ -75,7 +75,7 @@ def process(req):
     if i.get_query_size() >= 5:
         id, path, restaurant_name = i.get_query()
      
-        res = DialogflowResponse("We are recommanding " + restaurant_name + ", please rate 1 - 5?")
+        res = DialogflowResponse("We are recommending " + restaurant_name + ", please rate 1 - 5?")
         res.fulfillment_messages.append({
                 "text": {
                     "text": [
@@ -242,7 +242,7 @@ def makeReservation(req):
     first_name = "" if "firstName" not in params else params["firstName"]
     last_name = "" if "lastName" not in params else params["lastName"] 
     email_address = "" if "email" not in params else params["email"]
-    phone_number = "" if "phone" not in params else params["phone"] 
+    phone_number = "" if "phone" not in params else params["phoneNumber"] 
     
     
     MakeReservation.make_reservation(reservation_date,reservation_time,party_size,restaurant_name,first_name,last_name,email_address,phone_number)
