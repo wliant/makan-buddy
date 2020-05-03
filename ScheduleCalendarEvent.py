@@ -95,5 +95,14 @@ def schedule_reservation(reservation_date,reservation_time,party_size,restaurant
     print ('Event created: %s', (event.get('htmlLink')))
 
 if __name__ == '__main__':
+    sample_reservation_date = "14/06/2020"
+    sample_reservation_time = "1900"
+    sample_party_size = "2"
+    sample_restaurant_name ='Ristorante Takada'
+    sample_first_name = 'sam'
+    sample_last_name='lee'
+    sample_email_address = 'tangmeng1993@gmail.com'
+    sample_phone_number = '82053356'
+    sample_restaurant_address="356 Alexandra Road"
     schedule_reservation(sample_reservation_date,sample_reservation_time,sample_party_size,sample_restaurant_name,sample_first_name,sample_restaurant_address)
 # [END calendar_quickstart]

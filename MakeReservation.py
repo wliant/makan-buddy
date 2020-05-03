@@ -6,6 +6,7 @@ Created on Wed Apr 15 20:42:33 2020
 """
 
 import tagui as t
+from ScheduleCalendarEvent import schedule_reservation
 
 def check_availability(reservation_date,reservation_time,party_size,restaurant_name):
     try:
@@ -118,16 +119,29 @@ def make_reservation(reservation_date,reservation_time,party_size,restaurant_nam
         #Phone Number
         t.type('//input[@id="telephone"]',phone_number)
         #Agree Terms & Conditions
-        t.click(f"//input[@name='agree_term_conditions']")
+        if t.present(f"//input[@name='agree_term_conditions']"):
+            t.click(f"//input[@name='agree_term_conditions']")
         #Confirm Booking
         t.click(f"//button[@id='check_book_now']")
         t.wait(5)
         t.close()
         print('Success')
+        schedule_reservation(reservation_date,reservation_time,party_size,restaurant_name,first_name,sample_restaurant_address)
         return 'Reservation Successful'
     except:
         print('Error')
         return 'Reservation Unsuccessful. Unforunately, the restaurant was not able to accomodate your reservation.'
-        
+    
+if __name__ == '__main__':
+    sample_reservation_date = "14/06/2020"
+    sample_reservation_time = "1900"
+    sample_party_size = "3"
+    sample_restaurant_name ='Ristorante Takada'
+    sample_first_name = 'sam'
+    sample_last_name='lee'
+    sample_email_address = 'tangmeng1993@gmail.com'
+    sample_phone_number = '82053356'
+    sample_restaurant_address="356 Alexandra Road"
+    make_reservation(sample_reservation_date,sample_reservation_time,sample_party_size,sample_restaurant_name,sample_first_name,sample_last_name,sample_email_address,sample_phone_number)        
         
 #make_reservation(reservation_date,reservation_time,party_size,restaurant_name,first_name,last_name,email_address,phone_number)
