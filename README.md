@@ -7,37 +7,29 @@
 ---
 
 ## SECTION 2 : EXECUTIVE SUMMARY / PAPER ABSTRACT
-Singapore ranks amongst countries with the highest population density in the world. In a bid to have firm control over long term urban planning, the Singapore government came up with the “Built to Order” (abbreviated BTO) initiative back in 2001. These are new Housing Development Board (HDB) flats tightly controlled by their eligibility and quantity released every year. In more recent years, the modern BTO scheme in Singapore requires a waiting period of 3-4 years, and is generally targeted at young Singaporean couples looking to purchase their first property and set up a family. Nationality and income ceilings are some of the broad filters that determine one’s eligibility for the highly sought after projects. 
+Singapore is widely regarded as a food capital due to the wide variety of cuisines available due to our multi ethnic composition. The food and beverage industry in Singapore was worth $8.3 billion dollars in 2019 and is expected to grow 2.1% over the next five years.  This growth is aligned to the exponential global food and beverages (F&B) growth, alongside the growth in urban populations worldwide. Individuals are becoming more discerning, driving demand more nutritious, healthy food.
 
+Competition is stiff in the F&B industry, with over 6,500 establishments. An increase in the number of competitors in the market offering similar and new products that are competitively priced could have also posed a challenge for many F&B operators here, and many new F&B joints struggle to differentiate themselves and establish a following. Some of the challenges which F&B might face is high rental and food cost, but most critically the lack of manpower.
 
-Our team, comprising of 6 young Singaporeans, all hope to be property owners one day. Many of our peers opt for BTO flats due to their affordability, existence of financial aid from the government, as well as their resale value. However, there often exists a knowledge gap for these young couples during the decision making process and they end up making potentially regretful decisions. We would like to bridge this knowledge gap, and have hence chosen to base our project on creating a recommender system for BTO flats, utilizing the data from recent launches in Tampines, Eunos, Sengkang and Punggol. 
+One perpetual problem faced by diners is having to make dining choices and the numerous steps involved in ensuring an enjoyable dining experience. This process encompasses the search for restaurants, reading available reviews and opinions of restaurants and checking availability of the restaurant for reservations. On the other hand, establishments seek to minimize their marketing costs, but build a customer base. Makan Buddy seeks to address both problems from a consumer and business perspective. By leveraging on process automation and machine learning, we want to be able to connect diners to new restaurants and make the process of restaurant reservation a more seamless and enjoyable experience. 
 
-
-Using the techniques imparted to us in lectures, our group first set out to build a sizeable knowledge base via conducting an interview and administering a survey. While building the system, we utilized tools such as Java to scrape real time data from HDB website and transform it into a database, CLIPS to synthesize the rule based reasoning process, and Python to integrate it into an easy to use UI for the everyday user. To add icing on the cake, we even hosted the system on a website so that the everyday user can access it through the click of a link.
-
-
-Our team had an amazing time working on this project, and hope to share our insights with everyone. Despite a focus on BTO flats, we would recommend it for everybody interested in understanding property market trends for residence or investment purposes. There truly are a wide array of factors behind the decision to invest in a property, and we only wish there was more time to work on the scope and scale of the project. 
 
 ---
 
 ## SECTION 3 : CREDITS / PROJECT CONTRIBUTION
 
-| Official Full Name  | Student ID (MTech Applicable)  | Work Items (Who Did What) | Email (Optional) |
-| :------------ |:---------------:| :-----| :-----|
-| Desmond Chua | A1234567A | xxxxxxxxxx yyyyyyyyyy zzzzzzzzzz| A1234567A@nus.edu.sg |
-| Chang Ye Han | A1234567B | xxxxxxxxxx yyyyyyyyyy zzzzzzzzzz| A1234567B@gmail.com |
-| Chee Jia Wei | A1234567C | xxxxxxxxxx yyyyyyyyyy zzzzzzzzzz| A1234567C@outlook.com |
-| Ganesh Kumar | A1234567D | xxxxxxxxxx yyyyyyyyyy zzzzzzzzzz| A1234567D@yahoo.com |
-| Jeanette Lim | A1234567E | xxxxxxxxxx yyyyyyyyyy zzzzzzzzzz| A1234567E@qq.com |
+| Official Full Name  | Student ID  | Work Items | 
+| :------------ |:---------------:| :-----| 
+| Tan Wei Lian | A0048135J | Restaurant Search Agent, Restaurant Similarity Model|
+| Tang Meng | A0137099U | Angular Web Application,JBPM| 
+| Leong Jun Hun, Darryl | A0195318X | Project Report, Knowledge Modelling and Drools| 
 
 ---
 
 ## SECTION 4 : VIDEO OF SYSTEM MODELLING & USE CASE DEMO
 
-[![Sudoku AI Solver](http://img.youtube.com/vi/-AiYLUjP6o8/0.jpg)](https://youtu.be/-AiYLUjP6o8 "Sudoku AI Solver")
-
-Note: It is not mandatory for every project member to appear in video presentation; Presentation by one project member is acceptable. 
-More reference video presentations [here](https://telescopeuser.wordpress.com/2018/03/31/master-of-technology-solution-know-how-video-index-2/ "video presentations")
+<a href="https://youtu.be/vooP6BmJ4l4"><img src="Miscellaneous/YTDeck Sorcery.png"
+     style="float: left; margin-right: 0px;" /></a>
 
 ---
 
@@ -73,32 +65,11 @@ More reference video presentations [here](https://telescopeuser.wordpress.com/20
 ---
 ## SECTION 6 : PROJECT REPORT / PAPER
 
-`Refer to project report at Github Folder: ProjectReport`
-
-**Recommended Sections for Project Report / Paper:**
-- Executive Summary / Paper Abstract
-- Sponsor Company Introduction (if applicable)
-- Business Problem Background
-- Market Research
-- Project Objectives & Success Measurements
-- Project Solution (To detail domain modelling & system design.)
-- Project Implementation (To detail system development & testing approach.)
-- Project Performance & Validation (To prove project objectives are met.)
-- Project Conclusions: Findings & Recommendation
-- Appendix of report: Project Proposal
-- Appendix of report: Mapped System Functionalities against knowledge, techniques and skills of modular courses: MR, RS, CGS
-- Appendix of report: Installation and User Guide
-- Appendix of report: 1-2 pages individual project report per project member, including: Individual reflection of project journey: (1) personal contribution to group project (2) what learnt is most useful for you (3) how you can apply the knowledge and skills in other situations or your workplaces
-- Appendix of report: List of Abbreviations (if applicable)
-- Appendix of report: References (if applicable)
+`<Github File Link>` : <https://github.com/musicrokr/IRS-MR-2019-01-19-IS1PT-GRP-TheSundayLunactics-Harmony/blob/master/ProjectReport/The%20Sunday%20Lunatics%20%20-%20Harmony%20Project%20Report.pdf>
 
 ---
 ## SECTION 7 : MISCELLANEOUS
 
-`Refer to Github Folder: Miscellaneous`
-
-### HDB_BTO_SURVEY.xlsx
-* Results of survey
-* Insights derived, which were subsequently used in our system
+N.A.
 
 ---
