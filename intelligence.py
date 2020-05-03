@@ -18,25 +18,25 @@ class Intel:
 
     def load_queries(self):
         if os.path.isfile("queries.json"):
-            with open("queries.json", "r") as infile:
+            with open("queries.json", "r",encoding="utf-8") as infile:
                 result = json.load(infile)
             return result
         else:
             return []
     def write_queries(self):
-        with open("queries.json", 'w') as outfile:
+        with open("queries.json", 'w',encoding="utf-8") as outfile:
             json.dump(self.queries, outfile)
 
     def load_results(self):
         if os.path.isfile("results.json"):
-            with open("results.json", 'r') as infile:
+            with open("results.json", 'r', encoding="utf-8") as infile:
                 result = json.load(infile)
             return result
         else:
-            return []
+            return [] 
     def write_results(self, results):
-        with open("results.json", "w") as outfile:
-            json.dump(results, outfile)
+        with open("results.json", "w", encoding="utf-8") as outfile:
+            json.dump(results, outfile) 
     def load_restaurants(self):
         results = {}
         for f in os.listdir(restaurant_json_directory):
@@ -44,11 +44,11 @@ class Intel:
                 filePath = os.path.join(restaurant_json_directory, f)
                 with open(filePath, 'r', encoding="utf-8") as infile:
                     res = json.load(infile)
-                    images = list(res["images"].keys())
-                    if len(images) > 0:
+                    images = list(res["images"].keys()) 
+                    if len(images) > 0: 
                         results[f.replace(".json", "")] = res
 
-        return results
+        return results 
 
     def load_neighbors(self):
         results = {}
@@ -75,6 +75,7 @@ class Intel:
 
 
     def calculate_result(self):
+        print("ready to calculate result")
         neighbors = self.load_neighbors()
         occurrence = {}
         data_files = set()
@@ -101,7 +102,7 @@ class Intel:
         self.queries = []
         self.write_queries()
         self.write_results(loaded_results)
-        print("calculation complete")
+        print("calculation complete") 
 
     def load_valid_restaurants(self):
         with open("valid_restaurants.json", "r", encoding="utf-8") as jsonfile:
@@ -127,7 +128,7 @@ class Intel:
                 valid_restaurants = self.load_valid_restaurants()
                 loaded_results = loaded_results[1:]
 
-            
+             
             self.write_results(loaded_results)
             return (name, images)
 

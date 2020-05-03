@@ -6,7 +6,7 @@ import MakeReservation
 from multiprocessing import Pool
 
 
-server_url = "https://043ef1bf.ngrok.io"
+server_url = "https://61477f30.ngrok.io"
 
 CONTEXT_ASK_PROGRAMME = "getrestaurantinfo-followup" 
 
@@ -22,7 +22,7 @@ def askDate(req):
     res.add(OutputContexts(req.get_project_id(), req.get_session_id(),CONTEXT_ASK_PROGRAMME_YES,5,req.get_parameters()))
     return res.get_final_response() 
 
-def askTime(req):
+def askTime(req): 
     res = DialogflowResponse("How about the time?(e.g Time:1730)")
     res.add(SimpleResponse("How about the time?(e.g Time:1730)","How about the time?(e.g Time:1730)"))
     res.add(OutputContexts(req.get_project_id(), req.get_session_id(),CONTEXT_ASK_PROGRAMME_YES,5,req.get_parameters()))
@@ -72,7 +72,7 @@ def process(req):
     print("session id from image response"+req.get_session_id())
     
     print(i.get_query_size())
-    if i.get_query_size() >= 5:
+    if i.get_query_size() >= 5: 
         id, path, restaurant_name = i.get_query()
      
         res = DialogflowResponse("We are recommending " + restaurant_name + ", please rate 1 - 5?")
@@ -84,7 +84,8 @@ def process(req):
                 },
                 "platform": "SLACK"
             })
-        pool = Pool(processes=1)
+        print("query size >=5")
+        pool = Pool()
         pool.apply_async(i.calculate_result)
        
         print(res.get_final_response()) 
@@ -103,7 +104,7 @@ def process(req):
                   "postback": "ImageResponse queryId {} value {}".format(id, 1) 
                 },
                 { 
-                  "text": 2, 
+                  "text": 2,
                   "postback": "ImageResponse queryId {} value {}".format(id, 2) 
                 }, 
                 { 
@@ -147,7 +148,7 @@ def showResult(req):
                     "postback": "no"
                 }
             ]
-            },
+            }, 
             "platform": "SLACK" 
         })
     else:
@@ -206,9 +207,9 @@ def alternateResult(req):
             })
     print(res.get_final_response()) 
     return res.get_final_response()
-def makeReservation(req):
+def makeReservation(req): 
     params = req.get_parameters()
-    try:  
+    try:
         for con in req.get_ouputcontext_list(): 
             o_params = con["parameters"] 
             for x in o_params: 
@@ -239,10 +240,10 @@ def makeReservation(req):
     reservation_date = "" if "date" not in params else params["date.original"] 
     reservation_time = "" if "time" not in params else params["time.original"]
     party_size = "" if "partySize" not in params else params["partySize.original"] 
-    first_name = "" if "firstName" not in params else params["firstName"]
-    last_name = "" if "lastName" not in params else params["lastName"] 
+    first_name = "" if "firstName" not in params else params["firstName"] 
+    last_name = "" if "lastName" not in params else params["lastName"]
     email_address = "" if "email" not in params else params["email"]
-    phone_number = "" if "phone" not in params else params["phoneNumber"] 
+    phone_number = "" if "phoneNumber" not in params else params["phoneNumber"] 
     
     
     MakeReservation.make_reservation(reservation_date,reservation_time,party_size,restaurant_name,first_name,last_name,email_address,phone_number)
